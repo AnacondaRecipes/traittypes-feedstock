@@ -6,19 +6,19 @@ package:
     version: {{ version }}
 
 source:
-    fn: traittypes-{{ version }}.tar.gz
     url: https://pypi.io/packages/source/t/traittypes/traittypes-{{ version }}.tar.gz
     sha256: {{ sha256 }}
 
 build:
-    noarch: python
-    number: 2
-    script: python -m pip install --no-deps --ignore-installed .
+    number: 0
+    script: python -m pip install --no-deps --no-build-isolation --ignore-installed .
 
 requirements:
     host:
         - python
         - pip
+        - setuptools
+        - wheel
     run:
         - python
         - traitlets >=4.2.2,<6.0
@@ -26,12 +26,19 @@ requirements:
 test:
     imports:
         - traittypes
+    requires:
+        - pip
+    commands:
+        - pip check
 
 about:
-    home: https://github.com/jupyter-incubator/traittypes
+    home: https://github.com/jupyter-widgets/traittypes
     license: BSD-3-Clause
+    license_family: BSD
     summary: Trait types for NumPy, SciPy and friends
     license_file: LICENSE
+    dev_url: https://github.com/jupyter-widgets/traittypes
+    doc_url: https://github.com/jupyter-widgets/traittypes
 
 extra:
     recipe-maintainers:
