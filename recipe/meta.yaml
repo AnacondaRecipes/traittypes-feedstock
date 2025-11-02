@@ -1,17 +1,18 @@
+{% set name = "traittypes" %}
 {% set version = "0.2.3" %}
 {% set sha256 = "212feed38d566d772648768b78d3347c148ef23915b91c02078188e631316c86" %}
 
 package:
-  name: traittypes
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/t/traittypes/traittypes-{{ version }}.tar.gz
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: {{ sha256 }}
 
 build:
   number: 0
-  script: python -m pip install --no-deps --no-build-isolation --ignore-installed .
+  script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation --ignore-installed .
 
 requirements:
   host:
@@ -23,19 +24,31 @@ requirements:
     - python
     - traitlets >=4.2.2
 
+# >       self.assertTrue(foo.a.equals(pd.Series()))
+# E       AssertionError: False is not true
+{% set deselect_tests = "--deselect=test_traittypes.py::TestSeries::test_initial_values" %}
+
 test:
   imports:
     - traittypes
   requires:
     - pip
+    - pytest
+    - numpy
+    - pandas
+    - xarray
   commands:
     - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest {{ deselect_tests }} --pyargs traittypes.tests
 
 about:
   home: https://github.com/jupyter-widgets/traittypes
   license: BSD-3-Clause
   license_family: BSD
   summary: Trait types for NumPy, SciPy and friends
+  description: |
+    Trait types for NumPy, SciPy and friends
   license_file: LICENSE
   dev_url: https://github.com/jupyter-widgets/traittypes
   doc_url: https://github.com/jupyter-widgets/traittypes
