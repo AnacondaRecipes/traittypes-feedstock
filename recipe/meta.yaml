@@ -25,6 +25,7 @@ requirements:
 
 # >       self.assertTrue(foo.a.equals(pd.Series()))
 # E       AssertionError: False is not true
+# see: https://github.com/jupyter-widgets/traittypes/issues/55
 {% set deselect_tests = "--deselect=test_traittypes.py::TestSeries::test_initial_values" %}
 
 test:
